@@ -21,3 +21,19 @@ function showPhotoPreview(event) {
     $displayedImage.setAttribute('src', urlLink);
   }
 }
+
+var $form = document.querySelector('form');
+$form.addEventListener('submit', handleInputs);
+function handleInputs(event) {
+  event.preventDefault();
+  var objectOfValues = {
+    title: $form.elements.title.value,
+    url: $form.elements.url.value,
+    notes: $form.elements.notes.value
+  };
+  objectOfValues.nextEntryID = data.nextEntryId;
+  data.nextEntryId++;
+  data.entries.push(objectOfValues);
+  $displayedImage.setAttribute('src', 'images/placeholder-image-square.jpg');
+  $form.reset();
+}
