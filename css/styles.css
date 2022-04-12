@@ -1,63 +1,65 @@
 * {
-  font-family: "Proza Libre", sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-label {
-  font-weight: bold;
-}
-
-.grey-background {
-  background-color: #f0f0f0;
-}
-
-.purple-background {
-  background-color: #542e80;
-  color: white;
-}
-
-label,
-input,
-textarea {
-  width: 100%;
-  margin: 0 0 1rem;
-}
-
-input,
-textarea,
-button,
-.rounded-corners {
-  border-radius: 0.3rem;
-  margin: 0 0 2rem;
-}
-
-input,
-textarea {
-  border: 1px solid #d7d7d7;
-  padding: 0.5rem;
-}
-
-button {
-  padding: 0.35rem 1rem;
-  text-transform: uppercase;
-  cursor: pointer;
-  border: none;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
+body {
+  background-color: whitesmoke;
 }
 
 header {
-  padding: 1rem 0;
+  background-color: #562b81;
+}
+
+.header-title {
+  color: white;
+  font-weight: 100;
+}
+
+.photo-preview,
+label,
+input,
+textarea {
+  display: block;
+  width: 100%;
+}
+
+input,
+textarea {
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+  font-size: larger;
+  border: 1px solid grey;
+  border-radius: 0.25rem;
 }
 
 input:focus,
 textarea:focus {
-  outline: none;
-  border: 0.2rem solid #542e80;
+  outline-color: #562b81;
 }
 
-.displayed-image {
-  width: 100%;
+label {
+  margin-bottom: 1rem;
+  font-size: larger;
+  font-weight: 600;
+}
+
+.photo-preview {
+  margin-bottom: 2rem;
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit {
+  padding: 0.5rem 1.25rem;
+  background-color: #562b81;
+  font-size: large;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
 }

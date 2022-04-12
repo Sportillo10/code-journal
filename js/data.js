@@ -8,6 +8,7 @@ var data = {
 };
 
 var previousDataJSON = localStorage.getItem('javascript-local-storage');
+
 if (previousDataJSON !== null) {
   data = JSON.parse(previousDataJSON);
 }

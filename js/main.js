@@ -1,39 +1,25 @@
 /* global data */
 /* exported data */
 
-var $photoURLInput = document.querySelector('#photo-url');
-var $displayedImage = document.querySelector('.displayed-image');
+var $photoUrl = document.getElementById('photo-url');
+var $photoPreview = document.querySelector('.photo-preview');
 
-$photoURLInput.addEventListener('input', showPhotoPreview);
-function showPhotoPreview(event) {
-  var urlLink = event.target.value;
-  function isURL(urlLink) {
-    var url;
-    try {
-      url = new URL(urlLink);
-    } catch (_) {
-      return false;
-    }
+$photoUrl.addEventListener('input', function (event) {
+  $photoPreview.src = event.target.value;
+});
 
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  }
-  if (isURL(urlLink) !== false) {
-    $displayedImage.setAttribute('src', urlLink);
-  }
-}
+var $form = document.querySelector('.form');
 
-var $form = document.querySelector('form');
-$form.addEventListener('submit', handleInputs);
-function handleInputs(event) {
+$form.addEventListener('submit', function (event) {
   event.preventDefault();
-  var objectOfValues = {
+  var entry = {
     title: $form.elements.title.value,
-    url: $form.elements.url.value,
-    notes: $form.elements.notes.value
+    photoUrl: $form.elements.photoUrl.value,
+    notes: $form.elements.notes.value,
+    nextEntryId: data.nextEntryId
   };
-  objectOfValues.nextEntryID = data.nextEntryId;
   data.nextEntryId++;
-  data.entries.push(objectOfValues);
-  $displayedImage.setAttribute('src', 'images/placeholder-image-square.jpg');
+  data.entries.unshift(entry);
+  $photoPreview.src = 'images/placeholder-image-square.jpg';
   $form.reset();
-}
+});
