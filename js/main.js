@@ -72,22 +72,36 @@ function renderEntry(entry) {
 }
 
 window.addEventListener('DOMContentLoaded', function (event) {
-  if (data.entries.length > 0) {
-    $noEntry.classList.add('hidden');
-  }
-
-  for (let index = 0; index < data.entries.length; index++) {
-    var element = renderEntry(data.entries[index]);
-    $entriesContainer.appendChild(element);
-  }
+  renderPage(data.view);
 });
 
 $formButton.addEventListener('click', function (event) {
-  $entryForm.classList.remove('hidden');
-  $entries.classList.add('hidden');
+  renderPage('entry-form');
 });
 
 $entriesNav.addEventListener('click', function (event) {
-  $entries.classList.remove('hidden');
-  $entryForm.classList.add('hidden');
+  renderPage('entries');
 });
+
+function renderPage(page) {
+
+  data.view = page;
+  if (page === 'entry-form') {
+
+    $entryForm.classList.remove('hidden');
+    $entries.classList.add('hidden');
+  } else if (page === 'entries') {
+
+    if (data.entries.length > 0) {
+      $noEntry.classList.add('hidden');
+    }
+
+    for (let index = 0; index < data.entries.length; index++) {
+      var element = renderEntry(data.entries[index]);
+      $entriesContainer.appendChild(element);
+    }
+
+    $entries.classList.remove('hidden');
+    $entryForm.classList.add('hidden');
+  }
+}
