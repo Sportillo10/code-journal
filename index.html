@@ -18,7 +18,7 @@
     <header>
       <div class="container">
         <div class="row">
-          <div class="column-full flex-start">
+          <div class="column-full page-header">
             <h2 class="header-title">Code Journal</h2>
             <nav>
               <a class="entries-nav" href="#">Entries</a>
@@ -32,7 +32,8 @@
         <form class="form">
           <div class="row">
             <div class="column-full">
-              <h1>New Entry</h1>
+              <h1 class="new-entry">New Entry</h1>
+              <h1 class="edit-entry hidden">Edit Entry</h1>
             </div>
           </div>
           <div class="row">
@@ -45,9 +46,9 @@
             </div>
             <div class="column-half">
               <label for="title">Title</label>
-              <input required type="text" name="title" id="title"/>
+              <input required type="text" name="title" id="title" />
               <label for="photoUrl">Photo URL</label>
-              <input required type="url" name="photoUrl" id="photoUrl"/>
+              <input required type="url" name="photoUrl" id="photoUrl" />
             </div>
           </div>
           <div class="row">
@@ -63,7 +64,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="column-full button-container">
+            <div class="column-full submit-button-container">
               <button class="submit" type="submit">Save</button>
             </div>
           </div>
@@ -71,7 +72,7 @@
       </div>
       <div class="container" data-view="entries">
         <div class="row">
-          <div class="column-full flex-space-between">
+          <div class="column-full entries-header">
             <h1>Entries</h1>
             <button class="form-button" type="button">New</button>
           </div>
