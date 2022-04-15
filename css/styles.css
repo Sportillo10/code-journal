@@ -10,9 +10,26 @@ header {
   background-color: #562b81;
 }
 
+.page-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .header-title {
   color: white;
-  font-weight: 100;
+  font-weight: 400;
+}
+
+.entries-nav {
+  margin: 2rem;
+  font-size: large;
+  color: white;
+  text-decoration: none;
+}
+
+.entries-nav:hover {
+  text-decoration: underline;
 }
 
 .photo-preview,
@@ -49,12 +66,13 @@ label {
   border-radius: 0.25rem;
 }
 
-.button-container {
+.submit-button-container {
   display: flex;
   justify-content: flex-end;
 }
 
-.submit {
+.submit,
+.form-button {
   padding: 0.5rem 1.25rem;
   background-color: #562b81;
   font-size: large;
@@ -62,4 +80,51 @@ label {
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
+}
+
+.submit:hover,
+.form-button:hover {
+  background-color: #7c40a9;
+}
+
+.entries-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.no-entry {
+  text-align: center;
+}
+
+.entries-container {
+  padding-left: 0;
+  list-style: none;
+}
+
+.entry {
+  margin-bottom: 1.5rem;
+}
+
+.entry-title {
+  margin-top: 0;
+}
+
+.entry-notes {
+  line-height: 1.5rem;
+}
+
+.title-edit-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.entry-edit-icon {
+  font-size: 1.75rem;
+  color: #562b81;
+  cursor: pointer;
+}
+
+.entry-edit-icon:hover {
+  color: #7c40a9;
 }
