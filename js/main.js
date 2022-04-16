@@ -9,41 +9,17 @@ var $form = document.querySelector('.form');
 var $entriesContainer = document.querySelector('.entries-container');
 var $noEntry = document.querySelector('.no-entry');
 var $entriesNav = document.querySelector('.entries-nav');
-var $formButton = document.querySelector('.form-button');
-var $entryForm = document.querySelector('[data-view="entry-form"]');
-var $entries = document.querySelector('[data-view="entries"]');
-
-$photoUrl.addEventListener('input', function (event) {
-  $photoPreview.src = event.target.value;
-});
-
-$form.addEventListener('submit', function (event) {
-  event.preventDefault();
-
-  if (data.editing !== null) {
-    data.editing.title = $form.elements.title.value;
-    data.editing.photoUrl = $form.elements.photoUrl.value;
-    data.editing.notes = $form.elements.notes.value;
-    var $editEntryDataEntryId = document.querySelector(
-      `[data-entry-id="${data.editing.id}"]`
-    );
-    $editEntryDataEntryId.replaceWith(renderEntry(data.editing));
-  } else {
-    var entry = {
-      title: $form.elements.title.value,
-      photoUrl: $form.elements.photoUrl.value,
-      notes: $form.elements.notes.value,
-      id: data.nextEntryId
-    };
-    data.nextEntryId++;
-    data.entries.unshift(entry);
-    $noEntry.classList.add('hidden');
-    $entriesContainer.prepend(renderEntry(entry));
-  }
-
-  swapViews($entries, $entryForm);
-  resetNewEntry();
-});
+var $newFormButton = document.querySelector('.new-form-button');
+var $entryFormView = document.querySelector('[data-view="entry-form"]');
+var $entriesView = document.querySelector('[data-view="entries"]');
+var $saveButtonContainer = document.querySelector('.save-button-container');
+var $deleteEntryButtonContainer = document.querySelector(
+  '.delete-entry-button-container'
+);
+var $deleteEntryButton = document.querySelector('.delete-entry-button');
+var $modal = document.querySelector('.modal');
+var $cancelButton = document.querySelector('.cancel-button');
+var $confirmButton = document.querySelector('.confirm-button');
 
 function renderEntry(entry) {
   var $entry = document.createElement('li');
@@ -57,7 +33,7 @@ function renderEntry(entry) {
   );
 
   var $entryPhoto = document.createElement('img');
-  $entryPhoto.setAttribute('class', 'photo-preview entry-photo');
+  $entryPhoto.setAttribute('class', 'entry-photo');
   $entryPhoto.setAttribute('src', entry.photoUrl);
   $entryPhoto.setAttribute('alt', 'entry image');
 
@@ -101,74 +77,139 @@ function renderEntry(entry) {
   return $entry;
 }
 
-window.addEventListener('DOMContentLoaded', function (event) {
-  renderPage(data.view);
-});
-
-$formButton.addEventListener('click', function (event) {
-  renderPage('entry-form');
-});
-
-$entriesNav.addEventListener('click', function (event) {
-  renderPage('entries');
-});
-
-function renderPage(page) {
-
-  data.view = page;
-  if (page === 'entry-form') {
-    $entryForm.classList.remove('hidden');
-    $entries.classList.add('hidden');
-  } else if (page === 'entries') {
-    if (data.entries.length > 0) {
-      $noEntry.classList.add('hidden');
-    }
-    for (let index = 0; index < data.entries.length; index++) {
-      var element = renderEntry(data.entries[index]);
-      $entriesContainer.appendChild(element);
-    }
-    $entries.classList.remove('hidden');
-    $entryForm.classList.add('hidden');
-  }
+function addRemoveHidden(activeElement, hiddenElement) {
+  activeElement.classList.remove('hidden');
+  hiddenElement.classList.add('hidden');
 }
 
-$formButton.addEventListener('click', function (event) {
-  swapViews($entryForm, $entries);
-  resetNewEntry();
-});
-
-$entriesNav.addEventListener('click', function (event) {
-  swapViews($entries, $entryForm);
-  resetNewEntry();
-});
-
 function resetNewEntry() {
-  swapViews($newEntry, $editEntry);
   data.editing = null;
   $photoPreview.src = 'images/placeholder-image-square.jpg';
   $form.reset();
 }
 
-function swapViews(activeElement, hiddenElement) {
-  activeElement.classList.remove('hidden');
-  hiddenElement.classList.add('hidden');
+function swapDataView(dataView) {
+  if (dataView === 'entry-form') {
+    addRemoveHidden($entryFormView, $entriesView);
+    addRemoveHidden($newEntry, $editEntry);
+    addRemoveHidden($saveButtonContainer, $deleteEntryButtonContainer);
+    data.view = 'entry-form';
+    resetNewEntry();
+  }
+  if (dataView === 'entries') {
+    addRemoveHidden($entriesView, $entryFormView);
+    if (data.entries.length === 0) {
+      $noEntry.classList.remove('hidden');
+    } else {
+      $noEntry.classList.add('hidden');
+    }
+    data.view = 'entries';
+    resetNewEntry();
+  }
+  if (dataView === 'editing') {
+    var editingEntry = data.entries.find(function (element) {
+      return element.id === data.editing.id;
+    });
+    addRemoveHidden($entryFormView, $entriesView);
+    addRemoveHidden($editEntry, $newEntry);
+    addRemoveHidden($deleteEntryButtonContainer, $saveButtonContainer);
+    $form.elements.title.value = editingEntry.title;
+    $form.elements.photoUrl.value = editingEntry.photoUrl;
+    $photoPreview.src = editingEntry.photoUrl;
+    $form.elements.notes.value = editingEntry.notes;
+    data.view = 'editing';
+  }
 }
 
-$entriesContainer.addEventListener('click', function (event) {
-  if (event.target && event.target.matches('.entry-edit-icon')) {
-    swapViews($entryForm, $entries);
-    swapViews($editEntry, $newEntry);
-    var $closestDataEntryId = event.target.closest('[data-entry-id]');
-    for (let index = 0; index < data.entries.length; index++) {
-      const element = data.entries[index];
-      if (String(element.id) === $closestDataEntryId.dataset.entryId) {
-        data.editing = element;
-        $form.elements.title.value = element.title;
-        $form.elements.photoUrl.value = element.photoUrl;
-        $photoPreview.src = element.photoUrl;
-        $form.elements.notes.value = element.notes;
-        break;
-      }
-    }
+function handleUpdatePhotoUrl(event) {
+  $photoPreview.src = event.target.value;
+  if ($photoUrl.value === '') {
+    $photoPreview.src = 'images/placeholder-image-square.jpg';
   }
-});
+}
+
+function handleSubmitForm(event) {
+  event.preventDefault();
+  if (data.editing !== null) {
+    var $editEntryDataEntryId = document.querySelector(
+      `[data-entry-id="${data.editing.id}"]`
+    );
+    var editingEntryIndex = data.entries.findIndex(function (element) {
+      return element.id === data.editing.id;
+    });
+    data.editing.title = $form.elements.title.value;
+    data.editing.photoUrl = $form.elements.photoUrl.value;
+    data.editing.notes = $form.elements.notes.value;
+    $editEntryDataEntryId.replaceWith(renderEntry(data.editing));
+    data.entries[editingEntryIndex] = data.editing;
+  } else {
+    var entry = {
+      title: $form.elements.title.value,
+      photoUrl: $form.elements.photoUrl.value,
+      notes: $form.elements.notes.value,
+      id: data.nextEntryId
+    };
+    data.nextEntryId++;
+    data.entries.unshift(entry);
+    $entriesContainer.prepend(renderEntry(entry));
+  }
+  swapDataView('entries');
+}
+
+function handleLoadDomContent(event) {
+  for (let index = 0; index < data.entries.length; index++) {
+    var element = renderEntry(data.entries[index]);
+    $entriesContainer.appendChild(element);
+  }
+  swapDataView(data.view);
+}
+
+function handleViewNewForm(event) {
+  swapDataView('entry-form');
+}
+
+function handleViewEntries(event) {
+  swapDataView('entries');
+}
+
+function handleViewEditForm(event) {
+  if (event.target && event.target.matches('.entry-edit-icon')) {
+    var $closestDataEntryId = event.target.closest('[data-entry-id]');
+    var editingEntry = data.entries.find(function (element) {
+      return String(element.id) === $closestDataEntryId.dataset.entryId;
+    });
+    data.editing = editingEntry;
+    swapDataView('editing');
+  }
+}
+
+function handleAddModalView() {
+  $modal.classList.remove('hidden');
+}
+
+function handleRemoveModalView() {
+  $modal.classList.add('hidden');
+}
+
+function handleConfirmDeletion() {
+  var deleteEntryIndex = data.entries.findIndex(function (element) {
+    return element.id === data.editing.id;
+  });
+  var $deleteEntryDataEntryId = document.querySelector(
+    `[data-entry-id="${data.editing.id}"]`
+  );
+  data.entries.splice(deleteEntryIndex, 1);
+  $deleteEntryDataEntryId.remove();
+  $modal.classList.add('hidden');
+  swapDataView('entries');
+}
+
+$photoUrl.addEventListener('input', handleUpdatePhotoUrl);
+$form.addEventListener('submit', handleSubmitForm);
+window.addEventListener('DOMContentLoaded', handleLoadDomContent);
+$newFormButton.addEventListener('click', handleViewNewForm);
+$entriesNav.addEventListener('click', handleViewEntries);
+$entriesContainer.addEventListener('click', handleViewEditForm);
+$deleteEntryButton.addEventListener('click', handleAddModalView);
+$cancelButton.addEventListener('click', handleRemoveModalView);
+$confirmButton.addEventListener('click', handleConfirmDeletion);
